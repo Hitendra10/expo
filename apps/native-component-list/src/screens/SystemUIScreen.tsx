@@ -1,4 +1,4 @@
-import { SystemUI } from 'expo-system-ui';
+import * as SystemUI from 'expo-system-ui';
 import * as React from 'react';
 import { Button } from 'react-native';
 
