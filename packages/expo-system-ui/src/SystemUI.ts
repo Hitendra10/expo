@@ -11,6 +11,8 @@ const assertIsOnPlatform = (functionName: string, onlyAvailableOn: typeof Platfo
   }
 };
 
+export type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-touch';
+
 /**
  * * "light": Light Mode
  * * "dark": Dark/Night Mode
@@ -167,9 +169,47 @@ export function getStatusBarForegroundStyle(): Promise<'light' | 'dark'> {
   return ExpoSystemUI.getStatusBarForegroundStyle();
 }
 
+/**
+ * Sets whether the App should draw behind the Status Bar and Navigation Bar or not.
+ *
+ * @example
+ * ```ts
+ * // enables edge-to-edge mode
+ * SystemUI.setDrawsBehindSystemUI(true)
+ * // transparent backgrounds to see through
+ * SystemUI.setStatusBarBackgroundColor('#ffffff00')
+ * SystemUI.setNavigationBarBackgroundColor('#ffffff00')
+ * ```
+ */
 export function setDrawsBehindSystemUI(drawsBehindSystemUI: boolean): Promise<void> {
   assertIsOnPlatform('setDrawsBehindSystemUI', ['android']);
   return ExpoSystemUI.setDrawsBehindSystemUI(drawsBehindSystemUI);
+}
+
+/**
+ * Gets whether the App draws behind the Status Bar and Navigation Bar.
+ */
+export function getDrawsBehindSystemUI(): Promise<boolean> {
+  assertIsOnPlatform('getDrawsBehindSystemUI', ['android']);
+  return ExpoSystemUI.getDrawsBehindSystemUI();
+}
+
+/**
+ * Sets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ *
+ * This only takes effect when the Status Bar or Navigation Bar is hidden.
+ */
+export function setSystemUIBehavior(behavior: SystemUIBehavior): Promise<void> {
+  assertIsOnPlatform('setSystemUIBehavior', ['android']);
+  return ExpoSystemUI.setSystemUIBehavior(behavior);
+}
+
+/**
+ * Gets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ */
+export function getSystemUIBehavior(): Promise<SystemUIBehavior> {
+  assertIsOnPlatform('getSystemUIBehavior', ['android']);
+  return ExpoSystemUI.getSystemUIBehavior();
 }
 
 // FIXME(Marc): Setting appearance crashes on Android because of RNScreens.

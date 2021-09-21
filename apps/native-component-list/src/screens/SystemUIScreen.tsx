@@ -136,24 +136,47 @@ function SetStatusBarColorExample() {
   );
 }
 
+const systemUiBehaviors: SystemUI.SystemUIBehavior[] = [
+  'inset-swipe',
+  'inset-touch',
+  'overlay-swipe',
+];
+
 function EdgeToEdgeModeExample() {
   const [isEdgeToEdge, setIsEdgeToEdge] = React.useState(false);
+  const [systemUIBehavior, setSystemUiBehavior] =
+    React.useState<SystemUI.SystemUIBehavior>('inset-swipe');
 
   const onPress = React.useCallback(() => {
     setIsEdgeToEdge((is) => {
       const newValue = !is;
-      SystemUI.setNavigationBarBackgroundColor(newValue ? '#ffffff00' : '#ffffff');
-      SystemUI.setStatusBarBackgroundColor(newValue ? '#ffffff00' : '#ffffff');
+      SystemUI.setNavigationBarBackgroundColor(newValue ? '#ff000000' : '#ff0000ff');
+      SystemUI.setStatusBarBackgroundColor(newValue ? '#ff000000' : '#ff0000ff');
       SystemUI.setDrawsBehindSystemUI(newValue);
       return newValue;
     });
   }, []);
+
+  const nextSystemUiBehavior = React.useMemo(() => {
+    const index = systemUiBehaviors.indexOf(systemUIBehavior);
+    const newIndex = (index + 1) % systemUiBehaviors.length;
+    return systemUiBehaviors[newIndex];
+  }, [systemUIBehavior]);
+
+  const onPressBehavior = React.useCallback(() => {
+    SystemUI.setSystemUIBehavior(nextSystemUiBehavior);
+    setSystemUiBehavior(nextSystemUiBehavior);
+  }, [nextSystemUiBehavior]);
 
   return (
     <>
       <Button
         onPress={onPress}
         title={`${isEdgeToEdge ? 'Disable' : 'Enable'} Edge-to-Edge Mode`}
+      />
+      <Button
+        onPress={onPressBehavior}
+        title={`Set System UI behavior to ${nextSystemUiBehavior}`}
       />
     </>
   );

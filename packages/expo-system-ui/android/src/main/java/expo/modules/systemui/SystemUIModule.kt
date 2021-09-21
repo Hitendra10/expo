@@ -210,7 +210,43 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
   @ExpoMethod
   fun setDrawsBehindSystemUI(drawsBehindSystemUI: Boolean, promise: Promise) {
     activity.runOnUiThread {
-      WindowCompat.setDecorFitsSystemWindows(activity.window, drawsBehindSystemUI)
+      WindowCompat.setDecorFitsSystemWindows(activity.window, !drawsBehindSystemUI)
+    }
+  }
+
+  @ExpoMethod
+  fun getDrawsBehindSystemUI(promise: Promise) {
+    activity.runOnUiThread {
+      promise.resolve(!activity.window.decorView.fitsSystemWindows)
+    }
+  }
+
+  @ExpoMethod
+  fun setSystemUIBehavior(behavior: String, promise: Promise) {
+    activity.runOnUiThread {
+      WindowInsetsControllerCompat(activity.window, activity.window.decorView).let { controller ->
+        controller.systemBarsBehavior = when (behavior) {
+          "overlay-swipe" -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+          "inset-swipe" -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE
+          "inset-touch" -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+          else -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+        }
+      }
+    }
+  }
+
+  @ExpoMethod
+  fun getSystemUIBehavior(promise: Promise) {
+    activity.runOnUiThread {
+      WindowInsetsControllerCompat(activity.window, activity.window.decorView).let { controller ->
+        val behavior = when (controller.systemBarsBehavior) {
+          WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE -> "overlay-swipe"
+          WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE -> "inset-swipe"
+          WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH -> "inset-touch"
+          else -> "inset-touch"
+        }
+        promise.resolve(behavior)
+      }
     }
   }
 

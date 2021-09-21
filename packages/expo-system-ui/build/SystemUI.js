@@ -154,9 +154,44 @@ export function getStatusBarForegroundStyle() {
     assertIsOnPlatform('getStatusBarForegroundStyle', ['android']);
     return ExpoSystemUI.getStatusBarForegroundStyle();
 }
+/**
+ * Sets whether the App should draw behind the Status Bar and Navigation Bar or not.
+ *
+ * @example
+ * ```ts
+ * // enables edge-to-edge mode
+ * SystemUI.setDrawsBehindSystemUI(true)
+ * // transparent backgrounds to see through
+ * SystemUI.setStatusBarBackgroundColor('#ffffff00')
+ * SystemUI.setNavigationBarBackgroundColor('#ffffff00')
+ * ```
+ */
 export function setDrawsBehindSystemUI(drawsBehindSystemUI) {
     assertIsOnPlatform('setDrawsBehindSystemUI', ['android']);
     return ExpoSystemUI.setDrawsBehindSystemUI(drawsBehindSystemUI);
+}
+/**
+ * Gets whether the App draws behind the Status Bar and Navigation Bar.
+ */
+export function getDrawsBehindSystemUI() {
+    assertIsOnPlatform('getDrawsBehindSystemUI', ['android']);
+    return ExpoSystemUI.getDrawsBehindSystemUI();
+}
+/**
+ * Sets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ *
+ * This only takes effect when the Status Bar or Navigation Bar is hidden.
+ */
+export function setSystemUIBehavior(behavior) {
+    assertIsOnPlatform('setSystemUIBehavior', ['android']);
+    return ExpoSystemUI.setSystemUIBehavior(behavior);
+}
+/**
+ * Gets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ */
+export function getSystemUIBehavior() {
+    assertIsOnPlatform('getSystemUIBehavior', ['android']);
+    return ExpoSystemUI.getSystemUIBehavior();
 }
 // FIXME(Marc): Setting appearance crashes on Android because of RNScreens.
 //  See `SystemUIModule.kt`'s `setAppearance` function for details.

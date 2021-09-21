@@ -1,4 +1,5 @@
 import { ColorValue } from 'react-native';
+export declare type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-touch';
 /**
  * * "light": Light Mode
  * * "dark": Dark/Night Mode
@@ -107,4 +108,30 @@ export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Pr
  * ```
  */
 export declare function getStatusBarForegroundStyle(): Promise<'light' | 'dark'>;
+/**
+ * Sets whether the App should draw behind the Status Bar and Navigation Bar or not.
+ *
+ * @example
+ * ```ts
+ * // enables edge-to-edge mode
+ * SystemUI.setDrawsBehindSystemUI(true)
+ * // transparent backgrounds to see through
+ * SystemUI.setStatusBarBackgroundColor('#ffffff00')
+ * SystemUI.setNavigationBarBackgroundColor('#ffffff00')
+ * ```
+ */
 export declare function setDrawsBehindSystemUI(drawsBehindSystemUI: boolean): Promise<void>;
+/**
+ * Gets whether the App draws behind the Status Bar and Navigation Bar.
+ */
+export declare function getDrawsBehindSystemUI(): Promise<boolean>;
+/**
+ * Sets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ *
+ * This only takes effect when the Status Bar or Navigation Bar is hidden.
+ */
+export declare function setSystemUIBehavior(behavior: SystemUIBehavior): Promise<void>;
+/**
+ * Gets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ */
+export declare function getSystemUIBehavior(): Promise<SystemUIBehavior>;
