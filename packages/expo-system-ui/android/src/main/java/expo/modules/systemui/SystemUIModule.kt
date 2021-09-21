@@ -211,6 +211,7 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
   fun setDrawsBehindSystemUI(drawsBehindSystemUI: Boolean, promise: Promise) {
     activity.runOnUiThread {
       WindowCompat.setDecorFitsSystemWindows(activity.window, !drawsBehindSystemUI)
+      promise.resolve(null)
     }
   }
 
@@ -231,6 +232,7 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
           "inset-touch" -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
           else -> WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
         }
+        promise.resolve(null)
       }
     }
   }

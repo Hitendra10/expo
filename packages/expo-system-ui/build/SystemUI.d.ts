@@ -8,6 +8,9 @@ export declare type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-
  */
 /**
  * Changes the Android Status Bar's background color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * SystemUI.setStatusBarBackgroundColor("white");
@@ -16,6 +19,9 @@ export declare type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-
 export declare function setStatusBarBackgroundColor(color: ColorValue): Promise<void>;
 /**
  * Gets the Android Status Bar's background color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * const color = await SystemUI.getStatusBarBackgroundColor();
@@ -24,6 +30,9 @@ export declare function setStatusBarBackgroundColor(color: ColorValue): Promise<
 export declare function getStatusBarBackgroundColor(): Promise<ColorValue>;
 /**
  * Changes the Android Navigation Bar's background color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * SystemUI.setNavigationBarBackgroundColor("white");
@@ -32,6 +41,9 @@ export declare function getStatusBarBackgroundColor(): Promise<ColorValue>;
 export declare function setNavigationBarBackgroundColor(color: ColorValue): Promise<void>;
 /**
  * Gets the Android Navigation Bar's background color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * const color = await SystemUI.getNavigationBarBackgroundColor();
@@ -40,6 +52,9 @@ export declare function setNavigationBarBackgroundColor(color: ColorValue): Prom
 export declare function getNavigationBarBackgroundColor(): Promise<ColorValue>;
 /**
  * Changes the Android Navigation Bar's Divider color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * SystemUI.setNavigationBarDividerColor("red");
@@ -48,6 +63,9 @@ export declare function getNavigationBarBackgroundColor(): Promise<ColorValue>;
 export declare function setNavigationBarDividerColor(color: ColorValue): Promise<void>;
 /**
  * Gets the Android Navigation Bar's Divider color.
+ *
+ * @platform android
+ *
  * @example
  * ```typescript
  * const color = await SystemUI.getNavigationBarDividerColor();
@@ -56,6 +74,8 @@ export declare function setNavigationBarDividerColor(color: ColorValue): Promise
 export declare function getNavigationBarDividerColor(): Promise<ColorValue>;
 /**
  * Changes the Android Navigation Bar's visibility.
+ *
+ * @platform android
  *
  * @example
  * ```typescript
@@ -66,6 +86,8 @@ export declare function setNavigationBarVisibility(visibility: 'visible' | 'hidd
 /**
  * Changes the Android Status Bar's visibility.
  *
+ * @platform android
+ *
  * @example
  * ```typescript
  * SystemUI.setStatusBarVisibility("hidden");
@@ -74,6 +96,8 @@ export declare function setNavigationBarVisibility(visibility: 'visible' | 'hidd
 export declare function setStatusBarVisibility(visibility: 'visible' | 'hidden'): Promise<void>;
 /**
  * Changes the Android Navigation Bar's foreground style.
+ *
+ * @platform android
  *
  * @example
  * ```typescript
@@ -84,6 +108,8 @@ export declare function setNavigationBarForegroundStyle(style: 'light' | 'dark')
 /**
  * Gets the Android Navigation Bar's foreground style.
  *
+ * @platform android
+ *
  * @example
  * ```typescript
  * const style = await SystemUI.getNavigationBarForegroundStyle();
@@ -92,6 +118,8 @@ export declare function setNavigationBarForegroundStyle(style: 'light' | 'dark')
 export declare function getNavigationBarForegroundStyle(): Promise<'light' | 'dark'>;
 /**
  * Changes the Android Status Bar's foreground style.
+ *
+ * @platform android
  *
  * @example
  * ```typescript
@@ -102,6 +130,8 @@ export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Pr
 /**
  * Gets the Android Status Bar's foreground style.
  *
+ * @platform android
+ *
  * @example
  * ```typescript
  * const style = await SystemUI.getStatusBarForegroundStyle();
@@ -109,7 +139,14 @@ export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Pr
  */
 export declare function getStatusBarForegroundStyle(): Promise<'light' | 'dark'>;
 /**
- * Sets whether the App should draw behind the Status Bar and Navigation Bar or not.
+ * Sets whether the App should draw behind the Status Bar and Navigation Bar.
+ *
+ * When drawing behind the Status and Navigation Bar, make sure to adjust the Safe Area Insets accordingly.
+ *
+ * This is often used in conjunction with `setStatusBarBackgroundColor` and `setNavigationBarBackgroundColor`
+ * to enable an "edge-to-edge" mode by making the System UI transparent and letting your App draw beneath.
+ *
+ * @platform android
  *
  * @example
  * ```ts
@@ -123,15 +160,26 @@ export declare function getStatusBarForegroundStyle(): Promise<'light' | 'dark'>
 export declare function setDrawsBehindSystemUI(drawsBehindSystemUI: boolean): Promise<void>;
 /**
  * Gets whether the App draws behind the Status Bar and Navigation Bar.
+ *
+ * @platform android
  */
 export declare function getDrawsBehindSystemUI(): Promise<boolean>;
 /**
- * Sets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ * Sets the behavior of the Status Bar and Navigation Bar when they are hidden and the user wants to reveal them.
  *
- * This only takes effect when the Status Bar or Navigation Bar is hidden.
+ * For example, if the Navigation Bar is hidden (`setNavigationBarVisibility(false)`) and the System UI behavior
+ * is `'overlay-swipe'`, the user can swipe from the bottom of the screen to temporarily reveal the Navigation Bar.
+ *
+ * * `'overlay-swipe'`: Temporarily reveals the System UI after a swipe gesture (bottom or top) without insetting your App's content.
+ * * `'inset-swipe'`: Reveals the System UI after a swipe gesture (bottom or top) and insets your App's content (Safe Area). The System UI is visible until you explicitly hide it again.
+ * * `'inset-touch'`: Reveals the System UI after a touch anywhere on the screen and insets your App's content (Safe Area). The System UI is visible until you explicitly hide it again.
+ *
+ * @platform android
  */
 export declare function setSystemUIBehavior(behavior: SystemUIBehavior): Promise<void>;
 /**
  * Gets the behavior of the Status Bar and Navigation Bar when the user swipes or touches the screen.
+ *
+ * @platform android
  */
 export declare function getSystemUIBehavior(): Promise<SystemUIBehavior>;
