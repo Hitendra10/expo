@@ -1,5 +1,9 @@
 import { ColorValue } from 'react-native';
 export declare type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-touch';
+export declare type NavigationBarForegroundStyle = 'light' | 'dark';
+export declare type NavigationBarVisibility = 'visible' | 'hidden';
+export declare type StatusBarForegroundStyle = 'light' | 'dark';
+export declare type StatusBarVisibility = 'visible' | 'hidden';
 /**
  * * "light": Light Mode
  * * "dark": Dark/Night Mode
@@ -82,7 +86,7 @@ export declare function getNavigationBarDividerColor(): Promise<ColorValue>;
  * SystemUI.setNavigationBarVisibility("hidden");
  * ```
  */
-export declare function setNavigationBarVisibility(visibility: 'visible' | 'hidden'): Promise<void>;
+export declare function setNavigationBarVisibility(visibility: NavigationBarVisibility): Promise<void>;
 /**
  * Changes the Android Status Bar's visibility.
  *
@@ -93,7 +97,7 @@ export declare function setNavigationBarVisibility(visibility: 'visible' | 'hidd
  * SystemUI.setStatusBarVisibility("hidden");
  * ```
  */
-export declare function setStatusBarVisibility(visibility: 'visible' | 'hidden'): Promise<void>;
+export declare function setStatusBarVisibility(visibility: StatusBarVisibility): Promise<void>;
 /**
  * Changes the Android Navigation Bar's foreground style.
  *
@@ -104,7 +108,7 @@ export declare function setStatusBarVisibility(visibility: 'visible' | 'hidden')
  * SystemUI.setNavigationBarForegroundStyle("light");
  * ```
  */
-export declare function setNavigationBarForegroundStyle(style: 'light' | 'dark'): Promise<void>;
+export declare function setNavigationBarForegroundStyle(style: NavigationBarForegroundStyle): Promise<void>;
 /**
  * Gets the Android Navigation Bar's foreground style.
  *
@@ -115,7 +119,7 @@ export declare function setNavigationBarForegroundStyle(style: 'light' | 'dark')
  * const style = await SystemUI.getNavigationBarForegroundStyle();
  * ```
  */
-export declare function getNavigationBarForegroundStyle(): Promise<'light' | 'dark'>;
+export declare function getNavigationBarForegroundStyle(): Promise<NavigationBarForegroundStyle>;
 /**
  * Changes the Android Status Bar's foreground style.
  *
@@ -126,7 +130,7 @@ export declare function getNavigationBarForegroundStyle(): Promise<'light' | 'da
  * SystemUI.setStatusBarForegroundStyle("light");
  * ```
  */
-export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Promise<void>;
+export declare function setStatusBarForegroundStyle(style: StatusBarForegroundStyle): Promise<void>;
 /**
  * Gets the Android Status Bar's foreground style.
  *
@@ -137,7 +141,7 @@ export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Pr
  * const style = await SystemUI.getStatusBarForegroundStyle();
  * ```
  */
-export declare function getStatusBarForegroundStyle(): Promise<'light' | 'dark'>;
+export declare function getStatusBarForegroundStyle(): Promise<StatusBarForegroundStyle>;
 /**
  * Sets whether the App should draw behind the Status Bar and Navigation Bar.
  *

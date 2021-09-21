@@ -13,6 +13,11 @@ const assertIsOnPlatform = (functionName: string, onlyAvailableOn: typeof Platfo
 
 export type SystemUIBehavior = 'overlay-swipe' | 'inset-swipe' | 'inset-touch';
 
+export type NavigationBarForegroundStyle = 'light' | 'dark';
+export type NavigationBarVisibility = 'visible' | 'hidden';
+export type StatusBarForegroundStyle = 'light' | 'dark';
+export type StatusBarVisibility = 'visible' | 'hidden';
+
 /**
  * * "light": Light Mode
  * * "dark": Dark/Night Mode
@@ -122,7 +127,7 @@ export function getNavigationBarDividerColor(): Promise<ColorValue> {
  * SystemUI.setNavigationBarVisibility("hidden");
  * ```
  */
-export function setNavigationBarVisibility(visibility: 'visible' | 'hidden'): Promise<void> {
+export function setNavigationBarVisibility(visibility: NavigationBarVisibility): Promise<void> {
   assertIsOnPlatform('setNavigationBarVisibility', ['android']);
   return ExpoSystemUI.setNavigationBarVisibility(visibility);
 }
@@ -137,7 +142,7 @@ export function setNavigationBarVisibility(visibility: 'visible' | 'hidden'): Pr
  * SystemUI.setStatusBarVisibility("hidden");
  * ```
  */
-export function setStatusBarVisibility(visibility: 'visible' | 'hidden'): Promise<void> {
+export function setStatusBarVisibility(visibility: StatusBarVisibility): Promise<void> {
   assertIsOnPlatform('setStatusBarVisibility', ['android']);
   return ExpoSystemUI.setStatusBarVisibility(visibility);
 }
@@ -152,7 +157,9 @@ export function setStatusBarVisibility(visibility: 'visible' | 'hidden'): Promis
  * SystemUI.setNavigationBarForegroundStyle("light");
  * ```
  */
-export function setNavigationBarForegroundStyle(style: 'light' | 'dark'): Promise<void> {
+export function setNavigationBarForegroundStyle(
+  style: NavigationBarForegroundStyle
+): Promise<void> {
   assertIsOnPlatform('setNavigationBarForegroundStyle', ['android']);
   return ExpoSystemUI.setNavigationBarForegroundStyle(style);
 }
@@ -166,7 +173,7 @@ export function setNavigationBarForegroundStyle(style: 'light' | 'dark'): Promis
  * const style = await SystemUI.getNavigationBarForegroundStyle();
  * ```
  */
-export function getNavigationBarForegroundStyle(): Promise<'light' | 'dark'> {
+export function getNavigationBarForegroundStyle(): Promise<NavigationBarForegroundStyle> {
   assertIsOnPlatform('getNavigationBarForegroundStyle', ['android']);
   return ExpoSystemUI.getNavigationBarForegroundStyle();
 }
@@ -181,7 +188,7 @@ export function getNavigationBarForegroundStyle(): Promise<'light' | 'dark'> {
  * SystemUI.setStatusBarForegroundStyle("light");
  * ```
  */
-export function setStatusBarForegroundStyle(style: 'light' | 'dark'): Promise<void> {
+export function setStatusBarForegroundStyle(style: StatusBarForegroundStyle): Promise<void> {
   assertIsOnPlatform('setStatusBarForegroundStyle', ['android']);
   return ExpoSystemUI.setStatusBarForegroundStyle(style);
 }
@@ -195,7 +202,7 @@ export function setStatusBarForegroundStyle(style: 'light' | 'dark'): Promise<vo
  * const style = await SystemUI.getStatusBarForegroundStyle();
  * ```
  */
-export function getStatusBarForegroundStyle(): Promise<'light' | 'dark'> {
+export function getStatusBarForegroundStyle(): Promise<StatusBarForegroundStyle> {
   assertIsOnPlatform('getStatusBarForegroundStyle', ['android']);
   return ExpoSystemUI.getStatusBarForegroundStyle();
 }
