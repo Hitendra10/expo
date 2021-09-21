@@ -35,7 +35,7 @@ NSString *const EXMediaLibraryShouldDownloadFromNetworkKey = @"shouldDownloadFro
 @property (nonatomic, strong) PHFetchResult *allAssetsFetchResult;
 @property (nonatomic, weak) id<EXPermissionsInterface> permissionsManager;
 @property (nonatomic, weak) id<EXFileSystemInterface> fileSystem;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 @property (nonatomic, strong) NSMutableSet *saveToLibraryDelegates;
 
 @end
@@ -54,8 +54,8 @@ EX_EXPORT_MODULE(ExponentMediaLibrary);
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
+  _moduleRegistry = moduleRegistry;
   _fileSystem = [moduleRegistry getModuleImplementingProtocol:@protocol(EXFileSystemInterface)];
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
   _permissionsManager = [moduleRegistry getModuleImplementingProtocol:@protocol(EXPermissionsInterface)];
   [EXPermissionsMethodsDelegate registerRequesters:@[[EXMediaLibraryMediaLibraryPermissionRequester new], [EXMediaLibraryMediaLibraryWriteOnlyPermissionRequester new]] withPermissionsManager:_permissionsManager];
 }
@@ -105,6 +105,11 @@ EX_EXPORT_MODULE(ExponentMediaLibrary);
   } else {
     return [EXMediaLibraryMediaLibraryPermissionRequester class];
   }
+}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 EX_EXPORT_METHOD_AS(getPermissionsAsync,
@@ -599,14 +604,14 @@ EX_EXPORT_METHOD_AS(getAssetsAsync,
           [updatedAssets addObject:[EXMediaLibrary _exportAsset:asset]];
         }
         
-        [_eventEmitter sendEventWithName:EXMediaLibraryDidChangeEvent body:body];
+        [[self eventEmitter] sendEventWithName:EXMediaLibraryDidChangeEvent body:body];
         return;
       }
       
       // Emit event when the scope of changes were too large and incremental changes could not be provided.
       // For example, when the user changed the limited permissions.
       if (!changeDetails.hasIncrementalChanges) {
-        [_eventEmitter sendEventWithName:EXMediaLibraryDidChangeEvent body:@{
+        [[self eventEmitter] sendEventWithName:EXMediaLibraryDidChangeEvent body:@{
           @"hasIncrementalChanges": @(false)
         }];
       }

@@ -24,7 +24,11 @@ EX_EXPORT_MODULE(ExpoClipboard);
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 # pragma mark - Exported methods
@@ -82,7 +86,7 @@ EX_EXPORT_METHOD_AS(setString,
 - (void)listenToClipboard
 {
   UIPasteboard *clipboard = [UIPasteboard generalPasteboard];
-  [_eventEmitter sendEventWithName:onClipboardEventName body:@{ @"content" : clipboard.string ?: @"" }];
+  [[self eventEmitter] sendEventWithName:onClipboardEventName body:@{ @"content" : clipboard.string ?: @"" }];
 }
 
 @end

@@ -19,7 +19,7 @@ NSString * const EXPedometerModuleName = @"ExponentPedometer";
 @property (nonatomic, strong) CMPedometer *pedometer;
 @property (nonatomic, copy) CMPedometerHandler watchHandler;
 
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 @property (nonatomic, weak) id<EXAppLifecycleService> lifecycleManager;
 @property (nonatomic, weak) id<EXPermissionsInterface> permissionsManager;
 
@@ -41,7 +41,7 @@ NSString * const EXPedometerModuleName = @"ExponentPedometer";
       
       __strong EXPedometer *strongSelf = weakSelf;
       if (strongSelf) {
-        __strong id<EXEventEmitterService> eventEmitter = strongSelf.eventEmitter;
+        __strong id<EXEventEmitterService> eventEmitter = [strongSelf->_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
         if (eventEmitter) {
           [eventEmitter sendEventWithName:EXPedometerUpdateEventName
                                      body:@{@"steps": pedometerData.numberOfSteps}];
@@ -61,12 +61,10 @@ NSString * const EXPedometerModuleName = @"ExponentPedometer";
   }
 
   _isWatching = NO;
-  _eventEmitter = nil;
   _lifecycleManager = nil;
   [self stopObserving];
   
   if (moduleRegistry) {
-    _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
     _lifecycleManager = [moduleRegistry getModuleImplementingProtocol:@protocol(EXAppLifecycleService)];
     _permissionsManager = [moduleRegistry getModuleImplementingProtocol:@protocol(EXPermissionsInterface)];
   }

@@ -9,7 +9,6 @@
 @interface EXBaseSensorModule () <EXAppLifecycleListener>
 
 @property (nonatomic, weak) id sensorManager;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
 @property (nonatomic, weak) id<EXAppLifecycleService> lifecycleManager;
 
 @property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
@@ -63,12 +62,10 @@
   }
   
   _lifecycleManager = nil;
-  _eventEmitter = nil;
   [self stopObserving];
   _sensorManager = nil;
   
   if (moduleRegistry) {
-    _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
     _lifecycleManager = [moduleRegistry getModuleImplementingProtocol:@protocol(EXAppLifecycleService)];
     _sensorManager = [self getSensorServiceFromModuleRegistry:moduleRegistry];
   }
@@ -91,7 +88,7 @@
   [self subscribeToSensorService:_sensorManager withHandler:^(NSDictionary *event) {
     __strong EXBaseSensorModule *strongSelf = weakSelf;
     if (strongSelf) {
-      __strong id<EXEventEmitterService> eventEmitter = strongSelf.eventEmitter;
+      __strong id<EXEventEmitterService> eventEmitter = [strongSelf->_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
       if (eventEmitter) {
         [eventEmitter sendEventWithName:(NSString *)[strongSelf updateEventName] body:event];
       }

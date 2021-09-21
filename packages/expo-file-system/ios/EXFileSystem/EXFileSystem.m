@@ -43,7 +43,6 @@ typedef NS_ENUM(NSInteger, EXFileSystemUploadType) {
 @property (nonatomic, strong) EXSessionTaskDispatcher *sessionTaskDispatcher;
 @property (nonatomic, strong) EXTaskHandlersManager *taskHandlersManager;
 @property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
 @property (nonatomic, strong) NSString *documentDirectory;
 @property (nonatomic, strong) NSString *cachesDirectory;
 @property (nonatomic, strong) NSString *bundleDirectory;
@@ -95,8 +94,7 @@ EX_REGISTER_MODULE();
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
-  
+
   _sessionTaskDispatcher = [[EXSessionTaskDispatcher alloc] initWithSessionHandler:[moduleRegistry getSingletonModuleForName:@"SessionHandler"]];
   _backgroundSession = [self _createSession:EXFileSystemBackgroundSession delegate:_sessionTaskDispatcher];
   _foregroundSession = [self _createSession:EXFileSystemForegroundSession delegate:_sessionTaskDispatcher];
@@ -962,9 +960,8 @@ EX_EXPORT_METHOD_AS(getTotalDiskCapacityAsync, getTotalDiskCapacityAsyncWithReso
 
 - (void)sendEventWithName:(NSString *)eventName body:(id)body
 {
-  if (_eventEmitter != nil) {
-    [_eventEmitter sendEventWithName:eventName body:body];
-  }
+  id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  [eventEmitter sendEventWithName:eventName body:body];
 }
 
 - (NSDictionary<NSURLResourceKey, id> *)documentFileResourcesForKeys:(NSArray<NSURLResourceKey> *)keys

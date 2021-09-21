@@ -13,7 +13,7 @@
 @property (nonatomic, assign) BOOL isListening;
 @property (nonatomic, assign) BOOL isBeingObserved;
 
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, EXSingleNotificationHandlerTask *> *tasksMap;
 
@@ -53,7 +53,7 @@ EX_EXPORT_METHOD_AS(handleNotificationAsync,
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  _moduleRegistry = moduleRegistry;
   _notificationCenterDelegate = [moduleRegistry getSingletonModuleForName:@"NotificationCenterDelegate"];
 }
 
@@ -91,7 +91,8 @@ EX_EXPORT_METHOD_AS(handleNotificationAsync,
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {
-  EXSingleNotificationHandlerTask *task = [[EXSingleNotificationHandlerTask alloc] initWithEventEmitter:_eventEmitter
+  id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  EXSingleNotificationHandlerTask *task = [[EXSingleNotificationHandlerTask alloc] initWithEventEmitter:eventEmitter
                                                                                            notification:notification
                                                                                       completionHandler:completionHandler
                                                                                                delegate:self];

@@ -6,7 +6,6 @@
 @interface EXBattery ()
 
 @property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
-@property (nonatomic, weak) id <EXEventEmitterService> eventEmitter;
 @property (nonatomic, assign) BOOL hasListeners;
 @property (nonatomic, readonly) EXBatteryState batteryState;
 
@@ -38,8 +37,7 @@ EX_EXPORT_MODULE(ExpoBattery);
     [self invalidate];
   }
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
-  
+
   if (moduleRegistry) {
     UIDevice.currentDevice.batteryMonitoringEnabled = YES;
   }
@@ -85,8 +83,12 @@ EX_EXPORT_MODULE(ExpoBattery);
 
 - (void)invalidate
 {
-  _eventEmitter = nil;
   UIDevice.currentDevice.batteryMonitoringEnabled = NO;
+}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 // Called at most once every minute
@@ -96,7 +98,7 @@ EX_EXPORT_MODULE(ExpoBattery);
     return;
   }
   NSDictionary *result = @{@"batteryLevel": @(UIDevice.currentDevice.batteryLevel)};
-  [_eventEmitter sendEventWithName:@"Expo.batteryLevelDidChange" body:result];
+  [[self eventEmitter] sendEventWithName:@"Expo.batteryLevelDidChange" body:result];
 }
 
 - (void)batteryStateDidChange:(NSNotification *)notification
@@ -105,7 +107,7 @@ EX_EXPORT_MODULE(ExpoBattery);
     return;
   }
   NSDictionary *result = @{@"batteryState": @(self.batteryState)};
-  [_eventEmitter sendEventWithName:@"Expo.batteryStateDidChange" body:result];
+  [[self eventEmitter] sendEventWithName:@"Expo.batteryStateDidChange" body:result];
 }
 
 
@@ -115,7 +117,7 @@ EX_EXPORT_MODULE(ExpoBattery);
     return;
   }
   NSDictionary *result = @{@"lowPowerMode": @(NSProcessInfo.processInfo.isLowPowerModeEnabled)};
-  [_eventEmitter sendEventWithName:@"Expo.powerModeDidChange" body:result];
+  [[self eventEmitter] sendEventWithName:@"Expo.powerModeDidChange" body:result];
 }
 
 EX_EXPORT_METHOD_AS(getBatteryLevelAsync,

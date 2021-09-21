@@ -30,9 +30,9 @@ NSString * const EXHeadingChangedEventName = @"Expo.headingChanged";
 
 @interface EXLocation ()
 
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, EXLocationDelegate*> *delegates;
 @property (nonatomic, strong) NSMutableSet<EXLocationDelegate *> *retainedDelegates;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
 @property (nonatomic, weak) id<EXPermissionsInterface> permissionsManager;
 @property (nonatomic, weak) id<UMTaskManagerInterface> tasksManager;
 
@@ -51,9 +51,9 @@ EX_EXPORT_MODULE(ExpoLocation);
   return self;
 }
 
-- (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
+- (void)setModuleRegistry:(nullable EXModuleRegistry *)moduleRegistry
 {
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  _moduleRegistry = moduleRegistry;
   _tasksManager = [moduleRegistry getModuleImplementingProtocol:@protocol(UMTaskManagerInterface)];
 
   _permissionsManager = [moduleRegistry getModuleImplementingProtocol:@protocol(EXPermissionsInterface)];
@@ -68,6 +68,11 @@ EX_EXPORT_MODULE(ExpoLocation);
 {
   // Location managers must be created on the main thread
   return dispatch_get_main_queue();
+}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 # pragma mark - EXEventEmitter
@@ -151,7 +156,7 @@ EX_EXPORT_METHOD_AS(watchPositionImplAsync,
                              @"location": [EXLocation exportLocation:loc],
                              };
 
-      [strongSelf->_eventEmitter sendEventWithName:EXLocationChangedEventName body:body];
+      [[strongSelf eventEmitter] sendEventWithName:EXLocationChangedEventName body:body];
     }
   } onUpdateHeadings:nil onError:^(NSError *error) {
     // TODO: report errors
@@ -223,7 +228,7 @@ EX_EXPORT_METHOD_AS(watchDeviceHeading,
                                  @"accuracy": accuracy,
                                  },
                              };
-      [strongSelf->_eventEmitter sendEventWithName:EXHeadingChangedEventName body:body];
+      [[strongSelf eventEmitter] sendEventWithName:EXHeadingChangedEventName body:body];
     }
   } onError:^(NSError *error) {
     // Error getting updates

@@ -15,7 +15,7 @@ static NSString * const onDevicePushTokenEventName = @"onDevicePushToken";
 @property (nonatomic, assign) BOOL isBeingObserved;
 @property (nonatomic, assign) BOOL isSettlingPromise;
 
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 
 @property (nonatomic, strong) EXPromiseResolveBlock getDevicePushTokenResolver;
 @property (nonatomic, strong) EXPromiseRejectBlock getDevicePushTokenRejecter;
@@ -49,7 +49,7 @@ EX_EXPORT_METHOD_AS(getDevicePushTokenAsync,
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  _moduleRegistry = moduleRegistry;
   _pushTokenManager = [moduleRegistry getSingletonModuleForName:@"PushTokenManager"];
 }
 
@@ -102,7 +102,8 @@ EX_EXPORT_METHOD_AS(getDevicePushTokenAsync,
   }
 
   if (_isBeingObserved) {
-    [_eventEmitter sendEventWithName:onDevicePushTokenEventName
+    id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+    [eventEmitter sendEventWithName:onDevicePushTokenEventName
                                 body:@{ @"devicePushToken": stringToken }];
   }
 }

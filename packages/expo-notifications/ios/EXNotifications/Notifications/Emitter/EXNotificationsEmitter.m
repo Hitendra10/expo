@@ -13,7 +13,7 @@
 @property (nonatomic, assign) BOOL isBeingObserved;
 @property (nonatomic, assign) BOOL isListening;
 
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 
 @property (nonatomic, strong) UNNotificationResponse *lastNotificationResponse;
 
@@ -33,7 +33,7 @@ EX_EXPORT_METHOD_AS(getLastNotificationResponseAsync,
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  _moduleRegistry = moduleRegistry;
   _notificationCenterDelegate = [moduleRegistry getSingletonModuleForName:@"NotificationCenterDelegate"];
 }
 
@@ -97,7 +97,8 @@ EX_EXPORT_METHOD_AS(getLastNotificationResponseAsync,
   // we wouldn't be subscribed to the notification center delegate it's nice
   // to be sure this problem won't ever arise.
   if (_isBeingObserved) {
-    [_eventEmitter sendEventWithName:eventName body:body];
+    id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+    [eventEmitter sendEventWithName:eventName body:body];
   }
 }
 

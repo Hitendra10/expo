@@ -11,7 +11,6 @@ static NSString * const onScreenshotEventName = @"onScreenshot";
 @property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 @property (nonatomic, assign) BOOL isListening;
 @property (nonatomic, assign) BOOL isBeingObserved;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
 
 @end
 
@@ -26,7 +25,6 @@ EX_EXPORT_MODULE(ExpoScreenCapture);
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 - (instancetype)init {
@@ -110,7 +108,8 @@ EX_EXPORT_METHOD_AS(allowScreenCapture,
 
 - (void)listenForScreenCapture
 {
-  [_eventEmitter sendEventWithName:onScreenshotEventName body:nil];
+  id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  [eventEmitter sendEventWithName:onScreenshotEventName body:nil];
 }
 
 @end

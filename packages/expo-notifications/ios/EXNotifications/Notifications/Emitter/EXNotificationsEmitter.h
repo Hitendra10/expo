@@ -12,6 +12,4 @@ static NSString * const onDidReceiveNotificationResponse = @"onDidReceiveNotific
 
 @interface EXNotificationsEmitter : EXExportedModule <EXEventEmitter, EXModuleRegistryConsumer, EXNotificationsDelegate>
 
-@property (nonatomic, weak, readonly) id<EXEventEmitterService> eventEmitter;
-
 @end

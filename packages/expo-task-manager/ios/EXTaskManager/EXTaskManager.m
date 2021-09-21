@@ -16,7 +16,7 @@ NSString * const EXTaskManagerEventName = @"TaskManager.executeTask";
 
 @property (nonatomic, strong) NSString *appId;
 @property (nonatomic, strong) NSMutableArray<NSDictionary *> *eventsQueue;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 @property (nonatomic, weak) id<EXConstantsInterface> constantsService;
 @property (nonatomic, weak) id<UMTaskServiceInterface> taskService;
 
@@ -48,7 +48,7 @@ EX_EXPORT_MODULE(ExpoTaskManager);
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+  _moduleRegistry = moduleRegistry;
   _constantsService = [moduleRegistry getModuleImplementingProtocol:@protocol(EXConstantsInterface)];
   _taskService = [moduleRegistry getSingletonModuleForName:@"TaskService"];
 
@@ -61,6 +61,11 @@ EX_EXPORT_MODULE(ExpoTaskManager);
   return @{
            @"EVENT_NAME": EXTaskManagerEventName,
            };
+}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 # pragma mark - EXEventEmitter
@@ -79,7 +84,7 @@ EX_EXPORT_MODULE(ExpoTaskManager);
   if (_eventsQueue && _eventsQueue.count > 0) {
     // Emit queued events
     for (NSDictionary *eventBody in _eventsQueue) {
-      [_eventEmitter sendEventWithName:EXTaskManagerEventName body:eventBody];
+      [[self eventEmitter] sendEventWithName:EXTaskManagerEventName body:eventBody];
     }
   }
   _eventsQueue = nil;
@@ -190,7 +195,7 @@ EX_EXPORT_METHOD_AS(unregisterAllTasksAsync,
 {
   if (!_eventsQueue) {
     // Module's event emitter is already being observed, so we can send events.
-    [_eventEmitter sendEventWithName:EXTaskManagerEventName body:body];
+    [[self eventEmitter] sendEventWithName:EXTaskManagerEventName body:body];
   } else {
     // Otherwise add event body to the queue (it will be send in `startObserving`).
     [_eventsQueue addObject:body];

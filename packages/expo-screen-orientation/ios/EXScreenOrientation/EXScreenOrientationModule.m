@@ -16,7 +16,7 @@ static NSString *const EXScreenOrientationDidUpdateDimensions = @"expoDidUpdateD
 @interface EXScreenOrientationModule ()
 
 @property (nonatomic, weak) EXScreenOrientationRegistry *screenOrientationRegistry;
-@property (nonatomic, weak) id<EXEventEmitterService> eventEmitter;
+@property (nonatomic, weak) EXModuleRegistry *moduleRegistry;
 
 @end
 
@@ -32,8 +32,8 @@ EX_EXPORT_MODULE(ExpoScreenOrientation);
 
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
+  _moduleRegistry = moduleRegistry;
   [[moduleRegistry getModuleImplementingProtocol:@protocol(EXAppLifecycleService)] registerAppLifecycleListener:self];
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
   
   _screenOrientationRegistry = [moduleRegistry getSingletonModuleForName:@"ScreenOrientationRegistry"];
 }
@@ -147,7 +147,9 @@ EX_EXPORT_METHOD_AS(getOrientationAsync,
 - (void)screenOrientationDidChange:(UIInterfaceOrientation)orientation
 {
   UITraitCollection * currentTraitCollection = [_screenOrientationRegistry currentTrailCollection];
-  [_eventEmitter sendEventWithName:EXScreenOrientationDidUpdateDimensions body:@{
+  id<EXEventEmitterService> eventEmitter = [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+
+  [eventEmitter sendEventWithName:EXScreenOrientationDidUpdateDimensions body:@{
     @"orientationLock": [EXScreenOrientationUtilities exportOrientationLock:[_screenOrientationRegistry currentOrientationMask]],
     @"orientationInfo": @{
       @"orientation": [EXScreenOrientationUtilities exportOrientation:orientation],

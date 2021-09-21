@@ -30,7 +30,6 @@ EX_EXPORT_MODULE(ExpoInAppPurchases);
 - (void)setModuleRegistry:(EXModuleRegistry *)moduleRegistry
 {
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
 }
 
 - (NSArray<NSString *> *)supportedEvents
@@ -40,6 +39,11 @@ EX_EXPORT_MODULE(ExpoInAppPurchases);
 
 - (void)startObserving {}
 - (void)stopObserving {}
+
+- (id<EXEventEmitterService>)eventEmitter
+{
+  return [_moduleRegistry getModuleImplementingProtocol:@protocol(EXEventEmitterService)];
+}
 
 # pragma mark - Exported Methods
 
@@ -205,7 +209,7 @@ EX_EXPORT_METHOD_AS(disconnectAsync,
         // Emit results
         NSArray *results = @[[self getTransactionData:transaction acknowledged:NO]];
         NSDictionary *response = [self formatResults:results withResponseCode:OK];
-        [_eventEmitter sendEventWithName:kEXPurchasesUpdatedEventName body:response];
+        [[self eventEmitter] sendEventWithName:kEXPurchasesUpdatedEventName body:response];
         
         // Resolve promise
         [self resolvePromise:transaction.payment.productIdentifier value:nil];
@@ -220,7 +224,7 @@ EX_EXPORT_METHOD_AS(disconnectAsync,
         // Emit results with deferred response code
         NSArray *results = @[[self getTransactionData:transaction acknowledged:NO]];
         NSDictionary *response = [self formatResults:results withResponseCode:DEFERRED];
-        [_eventEmitter sendEventWithName:kEXPurchasesUpdatedEventName body:response];
+        [[self eventEmitter] sendEventWithName:kEXPurchasesUpdatedEventName body:response];
         
         // Resolve promise
         [self resolvePromise:transaction.payment.productIdentifier value:nil];
@@ -230,10 +234,10 @@ EX_EXPORT_METHOD_AS(disconnectAsync,
         // Emit results
         if (transaction.error.code == SKErrorPaymentCancelled){
           NSDictionary *response = [self formatResults:@[] withResponseCode:USER_CANCELED];
-          [_eventEmitter sendEventWithName:kEXPurchasesUpdatedEventName body:response];
+          [[self eventEmitter] sendEventWithName:kEXPurchasesUpdatedEventName body:response];
         } else {
           NSDictionary *response = [self formatResults:transaction.error.code];
-          [_eventEmitter sendEventWithName:kEXPurchasesUpdatedEventName body:response];
+          [[self eventEmitter] sendEventWithName:kEXPurchasesUpdatedEventName body:response];
         }
         
         // Finish transaction and resolve promise
