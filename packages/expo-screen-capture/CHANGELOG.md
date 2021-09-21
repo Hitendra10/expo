@@ -10,6 +10,8 @@
 
 ### 🐛 Bug fixes
 
+- Fixed accessing native event emitter.
+
 ### 💡 Others
 
 - Export missing `Subscription` type. ([#13352](https://github.com/expo/expo/pull/13352) by [@Simek](https://github.com/Simek))

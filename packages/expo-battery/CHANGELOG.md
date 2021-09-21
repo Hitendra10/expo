@@ -10,6 +10,8 @@
 
 ### 🐛 Bug fixes
 
+- Fixed accessing native event emitter.
+
 ### 💡 Others
 
 - Rewrite BatteryModule from Java to Kotlin. ([#13504](https://github.com/expo/expo/pull/13504) by [@mstach60161](https://github.com/mstach60161))

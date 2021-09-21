@@ -10,6 +10,8 @@
 
 ### 🐛 Bug fixes
 
+- Fixed accessing native event emitter.
+
 ### 💡 Others
 
 - Clean up Android code. ([#13517](https://github.com/expo/expo/pull/13517) by [@mstach60161](https://github.com/mstach60161))
