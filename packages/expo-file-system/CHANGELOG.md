@@ -11,7 +11,7 @@
 ### 🐛 Bug fixes
 
 - `getFreeDiskStorageAsync` now correctly reports free disk space on iOS. ([#14279](https://github.com/expo/expo/pull/14279) by [mickmaccallum](https://github.com/mickmaccallum))
-- Fixed accessing native event emitter.
+- Fixed accessing native event emitter. ([#14502](https://github.com/expo/expo/pull/14502) by [@tsapeta](https://github.com/tsapeta))
 
 ### 💡 Others
 

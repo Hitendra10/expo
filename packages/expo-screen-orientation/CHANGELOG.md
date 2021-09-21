@@ -11,7 +11,7 @@
 ### 🐛 Bug fixes
 
 - Fixed an issue with building on Xcode 13. ([#13898](https://github.com/expo/expo/pull/13898) by [@cruzach](https://github.com/cruzach))
-- Fixed accessing native event emitter.
+- Fixed accessing native event emitter. ([#14502](https://github.com/expo/expo/pull/14502) by [@tsapeta](https://github.com/tsapeta))
 
 ### 💡 Others
 

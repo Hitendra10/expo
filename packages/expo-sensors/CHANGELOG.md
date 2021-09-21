@@ -10,7 +10,7 @@
 
 ### 🐛 Bug fixes
 
-- Fixed accessing native event emitter.
+- Fixed accessing native event emitter. ([#14502](https://github.com/expo/expo/pull/14502) by [@tsapeta](https://github.com/tsapeta))
 
 ### 💡 Others
 

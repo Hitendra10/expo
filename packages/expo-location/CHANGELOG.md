@@ -15,7 +15,7 @@
 ### 🐛 Bug fixes
 
 - Fixed `Location.getCurrentPositionAsync` throwing `Location provider is unavailable.` error. ([#14281](https://github.com/expo/expo/pull/14281) by [@m1st4ke](https://github.com/m1st4ke))
-- Fixed accessing native event emitter.
+- Fixed accessing native event emitter. ([#14502](https://github.com/expo/expo/pull/14502) by [@tsapeta](https://github.com/tsapeta))
 
 ### 💡 Others
 
