@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import expo.modules.core.ExportedModule
@@ -38,9 +39,9 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
   }
 
   @ExpoMethod
-  fun setNavigationBarBackgroundColor(color: String, promise: Promise) {
+  fun setNavigationBarBackgroundColor(color: Int, promise: Promise) {
     activity.runOnUiThread {
-      activity.window.navigationBarColor = Color.parseColor(color)
+      activity.window.navigationBarColor = color
       promise.resolve(null)
     }
   }
@@ -58,10 +59,10 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
   }
 
   @ExpoMethod
-  fun setNavigationBarDividerColor(color: String, promise: Promise) {
+  fun setNavigationBarDividerColor(color: Int, promise: Promise) {
     activity.runOnUiThread {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        activity.window.navigationBarDividerColor = Color.parseColor(color)
+        activity.window.navigationBarDividerColor = color
         promise.resolve(null)
       } else {
         promise.reject("unavailable", "'setNavigationBarDividerColor' is only available on Android API 28 or higher!")
@@ -78,9 +79,9 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
   }
 
   @ExpoMethod
-  fun setStatusBarBackgroundColor(color: String, promise: Promise) {
+  fun setStatusBarBackgroundColor(color: Int, promise: Promise) {
     activity.runOnUiThread {
-      activity.window.statusBarColor = Color.parseColor(color)
+      activity.window.statusBarColor = color
       promise.resolve(null)
     }
   }
@@ -203,6 +204,13 @@ class SystemUIModule(context: Context) : ExportedModule(context) {
         "default" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_UNSPECIFIED)
       }
       promise.resolve(null)
+    }
+  }
+
+  @ExpoMethod
+  fun setDrawsBehindSystemUI(drawsBehindSystemUI: Boolean, promise: Promise) {
+    activity.runOnUiThread {
+      WindowCompat.setDecorFitsSystemWindows(activity.window, drawsBehindSystemUI)
     }
   }
 

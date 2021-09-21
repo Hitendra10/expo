@@ -19,6 +19,9 @@ export default function SystemUIScreen() {
       <Section title="Navigation Bar Divider Color">
         <SetNavigationBarDividerColorExample />
       </Section>
+      <Section title="Edge-to-edge mode example">
+        <EdgeToEdgeModeExample />
+      </Section>
       {/* <Section title="Appearance">
         <SetAppearanceExample />
       </Section> */}
@@ -128,6 +131,29 @@ function SetStatusBarColorExample() {
           setStyle(nextStyle);
         }}
         title={`Set Status Bar Style to ${nextStyle}`}
+      />
+    </>
+  );
+}
+
+function EdgeToEdgeModeExample() {
+  const [isEdgeToEdge, setIsEdgeToEdge] = React.useState(false);
+
+  const onPress = React.useCallback(() => {
+    setIsEdgeToEdge((is) => {
+      const newValue = !is;
+      SystemUI.setNavigationBarBackgroundColor(newValue ? '#ffffff00' : '#ffffff');
+      SystemUI.setStatusBarBackgroundColor(newValue ? '#ffffff00' : '#ffffff');
+      SystemUI.setDrawsBehindSystemUI(newValue);
+      return newValue;
+    });
+  }, []);
+
+  return (
+    <>
+      <Button
+        onPress={onPress}
+        title={`${isEdgeToEdge ? 'Disable' : 'Enable'} Edge-to-Edge Mode`}
       />
     </>
   );

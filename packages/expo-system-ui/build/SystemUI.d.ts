@@ -107,3 +107,4 @@ export declare function setStatusBarForegroundStyle(style: 'light' | 'dark'): Pr
  * ```
  */
 export declare function getStatusBarForegroundStyle(): Promise<'light' | 'dark'>;
+export declare function setDrawsBehindSystemUI(drawsBehindSystemUI: boolean): Promise<void>;

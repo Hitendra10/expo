@@ -1,5 +1,5 @@
 import { Platform } from 'expo-modules-core';
-import { ColorValue } from 'react-native';
+import { ColorValue, processColor } from 'react-native';
 
 import ExpoSystemUI from './ExpoSystemUI';
 
@@ -28,7 +28,8 @@ const assertIsOnPlatform = (functionName: string, onlyAvailableOn: typeof Platfo
  */
 export function setStatusBarBackgroundColor(color: ColorValue): Promise<void> {
   assertIsOnPlatform('setStatusBarBackgroundColor', ['android']);
-  return ExpoSystemUI.setStatusBarBackgroundColor(color);
+  const colorNumber = processColor(color);
+  return ExpoSystemUI.setStatusBarBackgroundColor(colorNumber);
 }
 /**
  * Gets the Android Status Bar's background color.
@@ -51,7 +52,8 @@ export function getStatusBarBackgroundColor(): Promise<ColorValue> {
  */
 export function setNavigationBarBackgroundColor(color: ColorValue): Promise<void> {
   assertIsOnPlatform('setNavigationBarBackgroundColor', ['android']);
-  return ExpoSystemUI.setNavigationBarBackgroundColor(color);
+  const colorNumber = processColor(color);
+  return ExpoSystemUI.setNavigationBarBackgroundColor(colorNumber);
 }
 /**
  * Gets the Android Navigation Bar's background color.
@@ -74,7 +76,8 @@ export function getNavigationBarBackgroundColor(): Promise<ColorValue> {
  */
 export function setNavigationBarDividerColor(color: ColorValue): Promise<void> {
   assertIsOnPlatform('setNavigationBarDividerColor', ['android']);
-  return ExpoSystemUI.setNavigationBarDividerColor(color);
+  const colorNumber = processColor(color);
+  return ExpoSystemUI.setNavigationBarDividerColor(colorNumber);
 }
 /**
  * Gets the Android Navigation Bar's Divider color.
@@ -162,6 +165,11 @@ export function setStatusBarForegroundStyle(style: 'light' | 'dark'): Promise<vo
 export function getStatusBarForegroundStyle(): Promise<'light' | 'dark'> {
   assertIsOnPlatform('getStatusBarForegroundStyle', ['android']);
   return ExpoSystemUI.getStatusBarForegroundStyle();
+}
+
+export function setDrawsBehindSystemUI(drawsBehindSystemUI: boolean): Promise<void> {
+  assertIsOnPlatform('setDrawsBehindSystemUI', ['android']);
+  return ExpoSystemUI.setDrawsBehindSystemUI(drawsBehindSystemUI);
 }
 
 // FIXME(Marc): Setting appearance crashes on Android because of RNScreens.
